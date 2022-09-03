@@ -1,29 +1,33 @@
+/*
+    Given a string s, return true if it's a palindrome
+    Ex. s = "A man, a plan, a canal: Panama" -> true
+
+    2 pointers, outside in, skip non-letters & compare
+
+    Time: O(n)
+    Space: O(1)
+*/
+
 class Solution {
 public:
     bool isPalindrome(string s) {
-        int start = 0, end = s.length()-1;
+        int i = 0;
+        int j = s.size() - 1;
         
-        while (start < end) {
-            char a = s[start], b = s[end];
-            
-            // Convert to caps
-            if (a >= 'a' && a <= 'z') a = a-'a'+'A';
-            if (b >= 'a' && b <= 'z') b = b - 'a' + 'A';
-                
-            // Logic
-            if ( (a < 'A' || a > 'Z') && (a < '0' || a > '9') ) {
-                start ++;
-                continue;
+        while (i < j) {
+            while (!isalnum(s[i]) && i < j) {
+                i++;
             }
-            if ( (b < 'A' || b > 'Z') && (b < '0' || b > '9') ) {
-                end --;
-                continue;
-            }            
-            if(a != b) return false;
-            start ++;
-            end --; 
+            while (!isalnum(s[j]) && i < j) {
+                j--;
+            }
+            if (tolower(s[i]) != tolower(s[j])) {
+                return false;
+            }
+            i++;
+            j--;
         }
         
-       return true;  
+        return true;
     }
 };

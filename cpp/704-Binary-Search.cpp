@@ -1,20 +1,27 @@
+/*
+    Given sorted int array, search for a target value
+    Ex. nums = [-1,0,3,5,9,12], target = 9 -> 4 (index)
+
+    Since array is sorted, perform binary search
+
+    Time: O(log n)
+    Space: O(1)
+*/
+
 class Solution {
 public:
     int search(vector<int>& nums, int target) {
-        int n = nums.size();
-        if (nums[0] == target) return 0;
-        if (nums[n-1] == target) return n-1;
+        int low = 0;
+        int high = nums.size() - 1;
         
-        int start = 0, end = n-1;
-        
-        while (start < end) {
-            int mid = start + (end-start)/2;
-            if (nums[mid] == target) return mid;
-            if (nums[mid] > target) {
-                end = mid;
-            }
-            else {
-                start = mid + 1;
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+            if (nums[mid] < target) {
+                low = mid + 1;
+            } else if (nums[mid] > target) {
+                high = mid - 1;
+            } else {
+                return mid;
             }
         }
         

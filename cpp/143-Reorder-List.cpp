@@ -1,3 +1,13 @@
+/*
+    Given head of linked-list, reorder list alternating outside in
+    Ex. head = [1,2,3,4] -> [1,4,2,3], head = [1,2,3,4,5] -> [1,5,2,4,3]
+
+    Find middle node, split in half, reverse 2nd half of list, merge
+
+    Time: O(n)
+    Space: O(1)
+*/
+
 /**
  * Definition for singly-linked list.
  * struct ListNode {
@@ -9,64 +19,57 @@
  * };
  */
 class Solution {
- public:
-  void reorderList(ListNode* head) {
-    ListNode* prev = nullptr;
-    ListNode* slow = head;
-    ListNode* fast = head;
-
-    // set slow to middle node
-    while (fast != nullptr && fast->next != nullptr) {
-      prev = slow;
-      slow = slow->next;
-      fast = fast->next->next;
+public:
+    void reorderList(ListNode* head) {
+        if (head->next == NULL) {
+            return;
+        }
+        
+        ListNode* prev = NULL;
+        ListNode* slow = head;
+        ListNode* fast = head;
+        
+        while (fast != NULL && fast->next != NULL) {
+            prev = slow;
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+        
+        prev->next = NULL;
+        
+        ListNode* l1 = head;
+        ListNode* l2 = reverse(slow);
+        
+        merge(l1, l2);
     }
-
-    if (prev != nullptr) {
-      prev->next = reverseList(slow);
-      mergeTwoLists(head, prev->next);
+private:
+    ListNode* reverse(ListNode* head) {
+        ListNode* prev = NULL;
+        ListNode* curr = head;
+        ListNode* next = curr->next;
+        
+        while (curr != NULL) {
+            next = curr->next;
+            curr->next = prev;
+            prev = curr;
+            curr = next;
+        }
+        
+        return prev;
     }
-  }
-
- private:
-  ListNode* reverseList(ListNode* head) {
-    ListNode* prev = nullptr;
-    ListNode* curr = head;
-
-    while (curr != nullptr) {
-      ListNode* next = curr->next;
-      curr->next = prev;
-      prev = curr;
-      curr = next;
+    void merge(ListNode* l1, ListNode* l2) {
+        while (l1 != NULL) {
+            ListNode* p1 = l1->next;
+            ListNode* p2 = l2->next;
+            
+            l1->next = l2;
+            if (p1 == NULL) {
+                break;
+            }
+            l2->next = p1;
+            
+            l1 = p1;
+            l2 = p2;
+        }
     }
-
-    return prev;
-  }
-
-  // invariant: list2 length = [list1 length, list1 length + 1]
-  ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
-    ListNode dummy;
-    ListNode* prev = &dummy;
-
-    ListNode* l1 = list1;
-    ListNode* l2 = list2;
-
-    while (l1 != list2) {
-      takeNode(prev, l1);
-      takeNode(prev, l2);
-    }
-
-    // handle odd number of nodes
-    if (l2 != nullptr) {
-      takeNode(prev, l2);
-    }
-
-    return dummy.next;
-  }
-
-  void takeNode(ListNode*& prev, ListNode*& curr) {
-    prev->next = curr;
-    prev = prev->next;
-    curr = curr->next;
-  }
 };

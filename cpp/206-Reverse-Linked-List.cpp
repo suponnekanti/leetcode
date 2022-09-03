@@ -1,3 +1,13 @@
+/*
+    Given the head of a singly linked list, reverse list & return
+    Ex. head = [1,2,3,4,5] -> [5,4,3,2,1], head = [1,2] -> [2,1]
+
+    Maintain prev, curr, & next pointers, iterate thru & reverse
+
+    Time: O(n)
+    Space: O(1)
+*/
+
 /**
  * Definition for singly-linked list.
  * struct ListNode {
@@ -11,16 +21,21 @@
 class Solution {
 public:
     ListNode* reverseList(ListNode* head) {
-        ListNode* rev = new ListNode(0);
-        ListNode* ptr = head;
-        
-        while(ptr) {
-            auto temp = ptr;
-            ptr=ptr->next;
-            temp-> next = rev->next;
-            rev->next = temp;
+        if (head == NULL || head->next == NULL) {
+            return head;
         }
         
-        return rev->next;
+        ListNode* prev = NULL;
+        ListNode* curr = head;
+        ListNode* next = curr->next;
+        
+        while (curr != NULL) {
+            next = curr->next;
+            curr->next = prev;
+            prev = curr;
+            curr = next;
+        }
+        
+        return prev;
     }
 };

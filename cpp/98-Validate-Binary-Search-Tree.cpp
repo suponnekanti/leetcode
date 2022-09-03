@@ -1,3 +1,12 @@
+/*
+    Given root of binary tree, determine if it's valid (left all < curr, right all > curr)
+    
+    Inorder traversal & check if prev >= curr, recursive/iterative solutions
+    
+    Time: O(n)
+    Space: O(n)
+*/
+
 /**
  * Definition for a binary tree node.
  * struct TreeNode {
@@ -9,23 +18,57 @@
  *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
  * };
  */
-void check(TreeNode* root,vector<int>& v)
- {
-    if(!root) return;
- check(root->left,v);
-    v.push_back(root->val);
-    check(root->right,v);
-}
 class Solution {
 public:
     bool isValidBST(TreeNode* root) {
-     vector<int> v;
-    check(root,v);
-        for(int i=0;i<v.size()-1;i++)
-        {
-            if(v[i]>=v[i+1])
-                return 0;
+        TreeNode* prev = NULL;
+        return inorder(root, prev);
+    }
+private:
+    bool inorder(TreeNode* root, TreeNode*& prev) {
+        if (root == NULL) {
+            return true;
         }
-        return 1;
+        
+        if (!inorder(root->left, prev)) {
+            return false;
+        }
+        
+        if (prev != NULL && prev->val >= root->val) {
+            return false;
+        }
+        prev = root;
+        
+        if (!inorder(root->right, prev)) {
+            return false;
+        }
+        
+        return true;
     }
 };
+
+// class Solution {
+// public:
+//     bool isValidBST(TreeNode* root) {
+//         stack<TreeNode*> stk;
+//         TreeNode* prev = NULL;
+        
+//         while (!stk.empty() || root != NULL) {
+//             while (root != NULL) {
+//                 stk.push(root);
+//                 root = root->left;
+//             }
+//             root = stk.top();
+//             stk.pop();
+            
+//             if (prev != NULL && prev->val >= root->val) {
+//                 return false;
+//             }
+            
+//             prev = root;
+//             root = root->right;
+//         }
+        
+//         return true;
+//     }
+// };

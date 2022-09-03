@@ -1,3 +1,13 @@
+/*
+    Given heads of 2 sorted linked lists, merge into 1 sorted list
+    Ex. list1 = [1,2,4], list2 = [1,3,4] -> [1,1,2,3,4,4]
+
+    Create curr pointer, iterate thru, choose next to be lower one
+
+    Time: O(m + n)
+    Space: O(1)
+*/
+
 /**
  * Definition for singly-linked list.
  * struct ListNode {
@@ -11,36 +21,43 @@
 class Solution {
 public:
     ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
-        ListNode* res = new ListNode(0);
-        auto ptr = res;
+        if (list1 == NULL && list2 == NULL) {
+            return NULL;
+        }
+        if (list1 == NULL) {
+            return list2;
+        }
+        if (list2 == NULL) {
+            return list1;
+        }
         
-        auto ptr1 = list1;
-        auto ptr2 = list2;
+        ListNode* head = NULL;
+        if (list1->val <= list2->val) {
+            head = list1;
+            list1 = list1->next;
+        } else {
+            head = list2;
+            list2 = list2->next;
+        }
+        ListNode* curr = head;
         
-        while (ptr1 && ptr2) {
-            if (ptr1->val < ptr2->val) {
-                res->next = ptr1;
-                ptr1 = ptr1->next;
-                res = res->next;
+        while (list1 != NULL && list2 != NULL) {
+            if (list1->val <= list2->val) {
+                curr->next = list1;
+                list1 = list1->next;
+            } else {
+                curr->next = list2;
+                list2 = list2->next;
             }
-            else {
-                res->next = ptr2;
-                ptr2 = ptr2->next;
-                res = res->next;
-            }
+            curr = curr->next;
         }
         
-        while (ptr1) {
-            res->next = ptr1;
-            res = res->next;
-            ptr1 = ptr1->next;
-        }
-        while (ptr2) {
-            res->next = ptr2;
-            res = res->next;
-            ptr2 = ptr2->next;
+        if (list1 == NULL) {
+            curr->next = list2;
+        } else {
+            curr->next = list1;
         }
         
-        return ptr->next;
+        return head;
     }
 };

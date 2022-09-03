@@ -1,28 +1,48 @@
-using namespace std;
+/*
+    Design stack that supports push, pop, top, & retriving min element
+    
+    2 stacks, 1 normal & 1 monotonic decr, only push if lower than top
+    
+    Time: O(1)
+    Space: O(n)
+*/
+
 class MinStack {
 public:
-    stack<pair<int, int>> stk;
-    int m;
-    
     MinStack() {
-        m = INT_MAX;
+        
     }
     
     void push(int val) {
-        stk.push({val, min(val, stk.empty()?INT_MAX:stk.top().second)});
+        stk.push(val);
+        
+        if (minStk.empty() || val < minStk.top().first) {
+            minStk.push({val, 1});
+        } else if (val == minStk.top().first) {
+            minStk.top().second++;
+        }
     }
     
     void pop() {
-        if(!stk.empty()) stk.pop();
+        if (stk.top() == minStk.top().first) {
+            minStk.top().second--;
+            if (minStk.top().second == 0) {
+                minStk.pop();
+            }
+        }
+        stk.pop();
     }
     
     int top() {
-        return stk.top().first;
+        return stk.top();
     }
     
     int getMin() {
-        return stk.top().second;
+        return minStk.top().first;
     }
+private:
+    stack<int> stk;
+    stack<pair<int, int>> minStk;
 };
 
 /**

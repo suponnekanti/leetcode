@@ -1,3 +1,12 @@
+/*
+    Given head of a linked list, determine if it has a cycle in it
+
+    Slow/fast pointers, if they ever intersect then there's a cycle
+
+    Time: O(n)
+    Space: O(1)
+*/
+
 /**
  * Definition for singly-linked list.
  * struct ListNode {
@@ -9,21 +18,21 @@
 class Solution {
 public:
     bool hasCycle(ListNode *head) {
-        if(!head) return 0;
-       unordered_set<ListNode*> s;
-        s.insert(head);
-         ListNode * ptr=head->next;
-        while(ptr)
-        {
-            if(s.find(ptr)==s.end())
-        {
-            s.insert(ptr);
-                ptr=ptr->next;
+        if (head == NULL) {
+            return false;
         }
-            else
-                return 1;
-        }
-        return 0;
         
+        ListNode* slow = head;
+        ListNode* fast = head;
+        
+        while (fast->next != NULL && fast->next->next != NULL) {
+            slow = slow->next;
+            fast = fast->next->next;
+            if (slow == fast) {
+                return true;
+            }
+        }
+        
+        return false;
     }
 };

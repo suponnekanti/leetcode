@@ -1,3 +1,12 @@
+/*
+    Given binary tree, determine if height-balanced (all left & right subtrees height diff <= 1)
+
+    Check if subtrees are balanced, if so, use their heights to determine further balance
+
+    Time: O(n)
+    Space: O(n)
+*/
+
 /**
  * Definition for a binary tree node.
  * struct TreeNode {
@@ -11,18 +20,28 @@
  */
 class Solution {
 public:
-    
-    int getHeight(TreeNode* root, unordered_map<TreeNode*, int>& umap) {
-        if (root==NULL) return 0;
-        if (umap.find(root) != umap.end()) return umap[root];
-        int res = max(getHeight(root->left, umap), getHeight(root->right, umap))+1;
-        umap[root] = res;
-        return res;
-    }
     bool isBalanced(TreeNode* root) {
-        unordered_map<TreeNode*, int> umap;
-        if (root == NULL) return true;
-        if (abs(getHeight(root->left, umap) - getHeight(root->right, umap)) > 1) return false;
-        return isBalanced(root->left) && isBalanced(root->right);
+        int height = 0;
+        return dfs(root, height);
+    }
+private:
+    bool dfs(TreeNode* root, int& height) {
+        if (root == NULL) {
+            height = -1;
+            return true;
+        }
+        
+        int left = 0;
+        int right = 0;
+        
+        if (!dfs(root->left, left) || !dfs(root->right, right)) {
+            return false;
+        }
+        if (abs(left - right) > 1) {
+            return false;
+        }
+        
+        height = 1 + max(left, right);
+        return true;
     }
 };
